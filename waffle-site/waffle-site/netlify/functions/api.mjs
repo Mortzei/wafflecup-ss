@@ -28,6 +28,8 @@ function cleanContent(c = {}) {
       address: str(c.contact?.address, 200),
       hours: (c.contact?.hours || []).slice(0, 10).map((h) => ({ label: str(h.label, 40), time: str(h.time, 40) })),
       phone: str(c.contact?.phone, 30),
+      whatsapp: str(c.contact?.whatsapp, 30),
+      email: str(c.contact?.email, 80),
       instagram: str(c.contact?.instagram, 40),
     },
     gallery: (c.gallery || []).slice(0, 24).map((g) => ({ id: str(g.id, 40).replace(/[^\w-]/g, ""), caption: str(g.caption, 60) })),

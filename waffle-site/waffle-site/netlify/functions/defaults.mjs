@@ -15,6 +15,8 @@ export const DEFAULT_CONTENT = {
     address: "Mahalle, Sokak No: 00\nİlçe / Şehir",
     hours: [ { label: "Hafta içi", time: "12:00 – 23:00" }, { label: "Hafta sonu", time: "11:00 – 00:00" } ],
     phone: "0 (5xx) xxx xx xx",
+    whatsapp: "",
+    email: "",
     instagram: "@waffle_cupss"
   },
   gallery: []
