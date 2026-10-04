@@ -239,7 +239,7 @@ if(d){
  const ph=norm(k.phone),wa=norm(k.whatsapp)||ph,mail=(k.email||'').trim(),ig=(k.instagram||'').trim(),ad=k.address.replace(/\n/g,' ').trim();
  $('#phn').textContent=k.phone;$('#phn').href=ph?'tel:+'+ph:'#';show('#r-ph',!!k.phone);
  $('#mail').textContent=mail;$('#mail').href='mailto:'+mail;show('#r-mail',!!mail);
- show('#r-adr',!!ad);show('#r-hrs',k.hours.length>0);
+ show('#r-adr',!!ad&&!/^https?:/i.test(ad));show('#r-hrs',k.hours.length>0);
  if(ph)document.querySelectorAll('.bar a[href^="tel:"]').forEach(a=>a.href='tel:+'+ph);
  if(wa){const u='https://wa.me/'+wa+'?text='+encodeURIComponent('Merhaba, sipariş vermek istiyorum.');$('#wa').href=u;const nb=document.querySelector('nav .btn');nb.href=u;nb.target='_blank';nb.rel='noopener'}
  show('#wa',!!wa);
@@ -249,9 +249,10 @@ if(d){
  const emb=/^https:\/\/www\.google\.com\/maps\/embed/.test(raw)?raw:'';
  const link=!emb&&/^https?:\/\//.test(raw)?raw:'';
  const txt=ad&&!/^https?:/i.test(ad);
- const src=emb||(txt?'https://maps.google.com/maps?q='+encodeURIComponent(ad)+'&z=16&output=embed':'');
+ const mq=/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(k.mapQ||'')?k.mapQ:'';
+ const src=emb||(mq?'https://maps.google.com/maps?q='+mq+'&z=17&output=embed':txt?'https://maps.google.com/maps?q='+encodeURIComponent(ad)+'&z=16&output=embed':'');
  if(src)$('#map').src=src;show('#mapw',!!src);
- const dir=link||(txt?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(ad):'');
+ const dir=link||(mq?'https://www.google.com/maps/search/?api=1&query='+mq:txt?'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(ad):'');
  if(dir)$('#dir').href=dir;show('#dir',!!dir);
  if(d.gallery.length){
   $('#gal').replaceChildren(...d.gallery.map(g=>{const x=el('div','ph',g.caption);x.style.backgroundImage='url(/api/img/'+g.id+')';return x}));

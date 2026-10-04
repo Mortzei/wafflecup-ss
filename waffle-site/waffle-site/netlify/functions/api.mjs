@@ -37,6 +37,25 @@ function cleanContent(c = {}) {
   };
 }
 
+async function resolveMap(v) {
+  v = (v || "").trim();
+  if (!v || /<iframe|google\.com\/maps\/embed/i.test(v)) return { q: "" };
+  if (!/^https?:\/\//i.test(v)) return { q: "", warn: true };
+  const dec = (t) => { try { return decodeURIComponent(t); } catch { return t; } };
+  const pick = (t) => {
+    t = dec(t);
+    const m = /!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/.exec(t) || /@(-?\d+\.\d+),(-?\d+\.\d+)/.exec(t) || /[?&](?:q|ll|center|query)=(-?\d+\.\d+),(-?\d+\.\d+)/i.exec(t);
+    return m ? m[1] + "," + m[2] : "";
+  };
+  try {
+    let q = pick(v);
+    if (q) return { q };
+    const r = await fetch(v, { redirect: "follow", headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120 Safari/537.36" }, signal: AbortSignal.timeout(6000) });
+    q = pick(r.url) || pick((await r.text()).slice(0, 300000));
+    return q ? { q } : { q: "", warn: true };
+  } catch { return { q: "", warn: true }; }
+}
+
 export default async (req) => {
   try {
     const s = db();
@@ -91,8 +110,11 @@ export default async (req) => {
         return json({ content: await getContent(), comments: (await getComments()).sort((a, b) => b.date.localeCompare(a.date)) });
 
       if (parts[1] === "content" && m === "PUT") {
-        await s.setJSON("content", cleanContent(await body()));
-        return json({ ok: true });
+        const c = cleanContent(await body());
+        const mw = await resolveMap(c.contact.map);
+        c.contact.mapQ = mw.q;
+        await s.setJSON("content", c);
+        return json({ ok: true, mapWarn: !!mw.warn });
       }
 
       if (parts[1] === "comments" && parts[2]) {
