@@ -117,7 +117,7 @@ main{padding:22px 0 130px}
 <script>
 const $=s=>document.querySelector(s);
 const h=(t,p={},...k)=>{const e=document.createElement(t);for(const[a,v]of Object.entries(p)){if(a==='class')e.className=v;else if(a.startsWith('on'))e.addEventListener(a.slice(2),v);else if(a in e)e[a]=v;else e.setAttribute(a,v)}e.append(...k);return e};
-let token='';try{token=localStorage.getItem('wt')||''}catch(_){}
+let token='';try{localStorage.removeItem('wt')}catch(_){}
 const S={content:null,comments:[],removed:[],dirty:false,tab:'comments',cf:'pending'};
 
 let tt;
@@ -128,11 +128,11 @@ async function api(path,o={}){
  if(r.status===401&&path!=='login'){logout();throw new Error('Oturum süresi doldu, tekrar giriş yap.')}
  if(!r.ok)throw new Error(j.error||'Bir hata oluştu');return j}
 
-function logout(){token='';try{localStorage.removeItem('wt')}catch(_){}S.dirty=false;$('#app').hidden=true;$('#login').hidden=false;$('#pw').value=''}
+function logout(){token='';S.dirty=false;$('#app').hidden=true;$('#login').hidden=false;$('#pw').value=''}
 $('#out').onclick=logout;
 $('#lform').addEventListener('submit',async e=>{
  e.preventDefault();const b=$('#lbtn'),er=$('#lerr');b.disabled=true;er.textContent='';
- try{const j=await api('login',{method:'POST',body:{password:$('#pw').value}});token=j.token;try{localStorage.setItem('wt',token)}catch(_){}await load()}
+ try{const j=await api('login',{method:'POST',body:{password:$('#pw').value}});token=j.token;await load()}
  catch(x){er.textContent=x.message}
  b.disabled=false});
 
@@ -242,6 +242,6 @@ $('#sbtn').onclick=async()=>{
  catch(e){toast(e.message,1)}
  b.disabled=false};
 
-(async()=>{if(token){try{await load();return}catch(_){}}$('#login').hidden=false})();
+$('#login').hidden=false;
 </script>
 </body></html>

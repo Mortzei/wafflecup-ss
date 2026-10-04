@@ -79,7 +79,7 @@ export default async (req) => {
       const real = process.env.ADMIN_PASSWORD;
       const ok = !!real && !!process.env.SESSION_SECRET && timingSafeEqual(sha(password ?? ""), sha(real));
       if (!ok) { await new Promise((r) => setTimeout(r, 1000)); return json({ error: "Şifre yanlış." }, 401); }
-      const exp = Date.now() + 7 * 864e5;
+      const exp = Date.now() + 2 * 36e5;
       return json({ token: exp + "." + sign(String(exp)) });
     }
 
