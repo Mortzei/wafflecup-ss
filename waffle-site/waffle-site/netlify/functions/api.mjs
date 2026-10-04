@@ -29,6 +29,7 @@ function cleanContent(c = {}) {
       hours: (c.contact?.hours || []).slice(0, 10).map((h) => ({ label: str(h.label, 40), time: str(h.time, 40) })),
       phone: str(c.contact?.phone, 30),
       whatsapp: str(c.contact?.whatsapp, 30),
+      map: str(c.contact?.map, 1500),
       email: str(c.contact?.email, 80),
       instagram: str(c.contact?.instagram, 40),
     },

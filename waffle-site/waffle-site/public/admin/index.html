@@ -222,6 +222,7 @@ function conPanel(){
  k.hours.forEach((x,i)=>hrs.append(h('div',{class:'hr'},bind(x,'label','Gün (Hafta içi)'),bind(x,'time','12:00 – 23:00'),btn('Sil',()=>{k.hours.splice(i,1);dirty();render()},'danger'))));
  w.append(h('section',{class:'card'},h('h3',{},'Adres ve telefon'),
   fld('Adres (harita bu adrese göre gösterilir)',h('textarea',{value:k.address,rows:3,oninput:e=>{k.address=e.target.value;dirty()}})),
+  fld('Google Haritalar (isteğe bağlı): yerleştirme kodu ya da link',h('textarea',{value:k.map||'',rows:3,placeholder:'Haritalar → Paylaş → Harita yerleştir → HTML\'yi kopyala',oninput:e=>{k.map=e.target.value;dirty()}})),
   fld('Telefon (Ara butonu bu numarayı arar)',bind(k,'phone','0 5xx xxx xx xx',{type:'tel'})),
   fld('WhatsApp sipariş numarası (boşsa telefon kullanılır)',bind(k,'whatsapp','0 5xx xxx xx xx',{type:'tel'})),
   fld('E-posta',bind(k,'email','ornek@mail.com',{type:'email'})),
