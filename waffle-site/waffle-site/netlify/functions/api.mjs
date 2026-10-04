@@ -31,6 +31,7 @@ function cleanContent(c = {}) {
       whatsapp: str(c.contact?.whatsapp, 30),
       map: str(c.contact?.map, 1500),
       email: str(c.contact?.email, 80),
+      orderUrl: str(c.contact?.orderUrl, 300),
       instagram: str(c.contact?.instagram, 40),
     },
     gallery: (c.gallery || []).slice(0, 24).map((g) => ({ id: str(g.id, 40).replace(/[^\w-]/g, ""), caption: str(g.caption, 60) })),

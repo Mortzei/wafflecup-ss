@@ -3,6 +3,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Yönetim Paneli</title>
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#5e1a2e">
+
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -226,6 +232,7 @@ function conPanel(){
   fld('Telefon (Ara butonu bu numarayı arar)',bind(k,'phone','0 5xx xxx xx xx',{type:'tel'})),
   fld('WhatsApp sipariş numarası (boşsa telefon kullanılır)',bind(k,'whatsapp','0 5xx xxx xx xx',{type:'tel'})),
   fld('E-posta',bind(k,'email','ornek@mail.com',{type:'email'})),
+  fld('Sipariş linki (üstteki "Sipariş ver" butonu buraya gider: Yemeksepeti, Getir vb.)',bind(k,'orderUrl','https://...',{type:'url'})),
   fld('Instagram (@kullaniciadi veya profil linki)',bind(k,'instagram','@kullaniciadi'))),
   h('section',{class:'card'},h('h3',{},'Çalışma saatleri'),hrs,btn('+ Satır ekle',()=>{k.hours.push({label:'',time:''});dirty();render()})));
  return w}
