@@ -64,6 +64,8 @@ main{padding:22px 0 130px}
 .hr{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px}
 .fld{display:grid;gap:6px;margin-bottom:14px}
 .fld label{color:var(--mute);font-size:14px}
+.chk{display:flex;gap:12px;align-items:center;margin-top:18px;cursor:pointer}
+.chk input{width:24px;height:24px;flex:none}
 .sub{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .sub button.on{background:var(--cream);color:var(--deep)}
 
@@ -234,7 +236,10 @@ function conPanel(){
   fld('E-posta',bind(k,'email','ornek@mail.com',{type:'email'})),
   fld('Sipariş linki (üstteki "Sipariş ver" butonu buraya gider: Yemeksepeti, Getir vb.)',bind(k,'orderUrl','https://...',{type:'url'})),
   fld('Instagram (@kullaniciadi veya profil linki)',bind(k,'instagram','@kullaniciadi'))),
-  h('section',{class:'card'},h('h3',{},'Çalışma saatleri'),hrs,btn('+ Satır ekle',()=>{k.hours.push({label:'',time:''});dirty();render()})));
+  h('section',{class:'card'},h('h3',{},'Çalışma saatleri'),
+  h('p',{class:'lead'},'Saati "12:00 – 23:00" biçiminde yaz. Gün için "Hafta içi", "Hafta sonu", "Her gün", "Pazartesi – Cuma" ya da tek bir gün adı yaz. Kapalı gün için saat yerine "Kapalı" yaz. Gece 12 için 00:00 yazabilirsin.'),
+  hrs,btn('+ Satır ekle',()=>{k.hours.push({label:'',time:''});dirty();render()}),
+  h('label',{class:'chk'},h('input',{type:'checkbox',checked:k.lockCall!==false,onchange:e=>{k.lockCall=e.target.checked;dirty()}}),h('span',{},'Çalışma saatleri dışında "Ara" butonu çalışmasın'))));
  return w}
 
 /* ---- kaydet ---- */

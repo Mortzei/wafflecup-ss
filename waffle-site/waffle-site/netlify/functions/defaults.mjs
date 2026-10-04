@@ -18,6 +18,7 @@ export const DEFAULT_CONTENT = {
     whatsapp: "",
     map: "",
     email: "",
+    lockCall: true,
     orderUrl: "https://www.yemeksepeti.com/restaurant/gnfz/waffle-cupss-gnfz",
     instagram: "@waffle_cupss"
   },
