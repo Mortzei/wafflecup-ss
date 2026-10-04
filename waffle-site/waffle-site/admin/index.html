@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Yönetim Paneli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#5e1a2e;--deep:#430f1e;--ink:#2c0a15;--cream:#f4e9d8;--mute:#d3bfae;--gold:#d9b27c;--line:rgba(244,233,216,.2);--bad:#ff8d7a;--ok:#8fd19e;box-sizing:border-box}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%}
+body{margin:0;min-height:100%;background:var(--wine);color:var(--cream);font:400 16px/1.5 Jost,system-ui,sans-serif;-webkit-text-size-adjust:100%;padding-top:env(safe-area-inset-top,0px)}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;margin:0;line-height:1.1}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.wrap{width:min(960px,100% - 28px);margin-inline:auto}
+
+/* girişler */
+input,textarea{width:100%;font:inherit;font-size:16px;color:var(--cream);background:rgba(0,0,0,.25);border:1px solid var(--line);padding:11px 12px;border-radius:0;min-width:0}
+textarea{min-height:84px;resize:vertical}
+input::placeholder,textarea::placeholder{color:rgba(211,191,174,.55)}
+button{font:inherit;cursor:pointer;min-height:44px;padding:8px 16px;border:1px solid var(--cream);background:transparent;color:var(--cream);border-radius:0}
+button:hover{background:rgba(244,233,216,.12)}
+button:disabled{opacity:.5;cursor:default}
+button.fill{background:var(--cream);color:var(--deep);font-weight:500}button.fill:hover{background:#fff}
+button.sm{min-height:40px;min-width:44px;padding:6px 12px}
+button.danger{border-color:var(--bad);color:var(--bad)}
+button.ok{border-color:var(--ok);color:var(--ok)}
+
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:20px}
+#login form{width:min(380px,100%);background:var(--deep);border:1px solid var(--line);padding:32px 26px;display:grid;gap:14px}
+#login h1{font-size:38px}
+#login p{margin:0;color:var(--mute);font-size:15px}
+#lerr{color:var(--bad);min-height:1.4em;font-size:15px}
+
+/* üst bar */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:rgba(67,15,30,.97);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0}
+.top h1{font-size:26px}
+.top a{color:var(--mute);font-size:15px;margin-right:6px}
+#tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-bottom:0}
+#tabs::-webkit-scrollbar{display:none}
+#tabs button{flex:0 0 auto;border:0;border-bottom:2px solid transparent;color:var(--mute);padding:10px 16px}
+#tabs button.on{color:#fff;border-bottom-color:var(--gold)}
+.badge{display:inline-block;min-width:20px;padding:0 6px;margin-left:6px;background:var(--gold);color:var(--ink);font-size:13px;line-height:20px;text-align:center;border-radius:10px}
+
+main{padding:22px 0 130px}
+.card{background:rgba(0,0,0,.18);border:1px solid var(--line);padding:16px;margin-bottom:16px}
+.card>h3{font-size:26px;margin-bottom:12px;color:var(--gold)}
+.lead{color:var(--mute);margin:0 0 16px;font-size:15px}
+.ch{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:12px}
+.ch .act{display:flex;gap:6px;flex-wrap:wrap;grid-column:1/-1}
+.ch input{font:600 22px 'Cormorant Garamond',Georgia,serif}
+.it{display:grid;grid-template-columns:1fr 96px;gap:8px;padding:12px 0;border-top:1px solid var(--line)}
+.it .d,.it .act{grid-column:1/-1}
+.act{display:flex;gap:6px;flex-wrap:wrap}
+.hr{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin-bottom:8px}
+.fld{display:grid;gap:6px;margin-bottom:14px}
+.fld label{color:var(--mute);font-size:14px}
+.sub{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.sub button.on{background:var(--cream);color:var(--deep)}
+
+/* yorumlar */
+.rc{background:rgba(0,0,0,.18);border:1px solid var(--line);padding:16px;margin-bottom:12px}
+.rc .st{color:var(--gold);letter-spacing:.1em}
+.rc p{margin:6px 0 8px;overflow-wrap:anywhere;white-space:pre-wrap}
+.rc small{color:var(--mute);display:block;margin-bottom:12px}
+.empty{color:var(--mute);padding:24px 0}
+
+/* galeri */
+.gg{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,200px),1fr));gap:12px}
+.gi{border:1px solid var(--line);background:rgba(0,0,0,.18);padding:10px;display:grid;gap:8px}
+.gi img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:var(--ink)}
+.gi .act button{flex:1}
+
+/* kaydet çubuğu */
+#save{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--deep);border-top:1px solid var(--gold);padding:12px 0;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+#save .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#save span{color:var(--gold)}
+
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:9;background:var(--cream);color:var(--deep);padding:10px 18px;max-width:calc(100% - 28px);text-align:center}
+#toast.err{background:var(--bad)}
+
+@media(min-width:720px){
+ main{padding-top:32px}
+ .ch{grid-template-columns:1fr auto}
+ .ch .act{grid-column:auto}
+ .it{grid-template-columns:1.2fr 2fr 110px auto;align-items:start}
+ .it .d{grid-column:auto}
+ .it .act{grid-column:auto}
+ .hr{grid-template-columns:1fr 1fr auto}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+
+<div id="login" hidden>
+<form id="lform">
+<h1>Yönetim Paneli</h1>
+<p>Devam etmek için şifreni gir.</p>
+<input id="pw" type="password" placeholder="Şifre" autocomplete="current-password" required>
+<p id="lerr" role="alert"></p>
+<button class="fill" id="lbtn" type="submit">Giriş yap</button>
+</form>
+</div>
+
+<div id="app" hidden>
+<div class="top"><div class="wrap">
+<div class="bar"><h1>Yönetim Paneli</h1><div><a href="/" target="_blank" rel="noopener">Siteyi gör</a><button class="sm" id="out">Çıkış</button></div></div>
+<nav id="tabs" aria-label="Bölümler"></nav>
+</div></div>
+<main><div class="wrap" id="panel"></div></main>
+<div id="save" hidden><div class="wrap"><span>Kaydedilmemiş değişiklikler var</span><button class="fill" id="sbtn">Kaydet</button></div></div>
+</div>
+<div id="toast" role="status" hidden></div>
+
+<script>
+const $=s=>document.querySelector(s);
+const h=(t,p={},...k)=>{const e=document.createElement(t);for(const[a,v]of Object.entries(p)){if(a==='class')e.className=v;else if(a.startsWith('on'))e.addEventListener(a.slice(2),v);else if(a in e)e[a]=v;else e.setAttribute(a,v)}e.append(...k);return e};
+let token='';try{token=localStorage.getItem('wt')||''}catch(_){}
+const S={content:null,comments:[],removed:[],dirty:false,tab:'comments',cf:'pending'};
+
+let tt;
+function toast(m,err){const t=$('#toast');t.textContent=m;t.className=err?'err':'';t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,3200)}
+async function api(path,o={}){
+ const r=await fetch('/api/'+path,{method:o.method||'GET',headers:{'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{})},body:o.body?JSON.stringify(o.body):undefined});
+ const j=await r.json().catch(()=>({}));
+ if(r.status===401&&path!=='login'){logout();throw new Error('Oturum süresi doldu, tekrar giriş yap.')}
+ if(!r.ok)throw new Error(j.error||'Bir hata oluştu');return j}
+
+function logout(){token='';try{localStorage.removeItem('wt')}catch(_){}S.dirty=false;$('#app').hidden=true;$('#login').hidden=false;$('#pw').value=''}
+$('#out').onclick=logout;
+$('#lform').addEventListener('submit',async e=>{
+ e.preventDefault();const b=$('#lbtn'),er=$('#lerr');b.disabled=true;er.textContent='';
+ try{const j=await api('login',{method:'POST',body:{password:$('#pw').value}});token=j.token;try{localStorage.setItem('wt',token)}catch(_){}await load()}
+ catch(x){er.textContent=x.message}
+ b.disabled=false});
+
+async function load(){
+ const d=await api('admin/data');S.content=d.content;S.comments=d.comments;S.removed=[];S.dirty=false;
+ $('#login').hidden=true;$('#app').hidden=false;render()}
+
+const dirty=()=>{S.dirty=true;$('#save').hidden=false};
+addEventListener('beforeunload',e=>{if(S.dirty){e.preventDefault();e.returnValue=''}});
+
+const TABS=[['comments','Yorumlar'],['menu','Menü'],['gallery','Galeri'],['contact','İletişim']];
+function render(){
+ const pend=S.comments.filter(c=>c.status==='pending').length;
+ $('#tabs').replaceChildren(...TABS.map(([k,l])=>{
+  const b=h('button',{class:k===S.tab?'on':'',onclick:()=>{S.tab=k;render();scrollTo(0,0)}},l);
+  if(k==='comments'&&pend)b.append(h('span',{class:'badge'},String(pend)));return b}));
+ $('#panel').replaceChildren(({comments:comPanel,menu:menuPanel,gallery:galPanel,contact:conPanel})[S.tab]());
+ $('#save').hidden=!S.dirty}
+
+const bind=(o,k,ph,x={})=>h('input',{value:o[k]||'',placeholder:ph,type:'text',...x,oninput:e=>{o[k]=e.target.value;dirty()}});
+const btn=(t,f,c='')=>h('button',{class:'sm '+c,type:'button',onclick:f},t);
+function move(a,i,d){const j=i+d;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]];dirty();render()}
+
+/* ---- yorumlar ---- */
+async function cAct(id,fn,msg){try{await fn();toast(msg);const d=await api('admin/data');S.comments=d.comments;render()}catch(e){toast(e.message,1)}}
+function comPanel(){
+ const w=h('div'),pend=S.comments.filter(c=>c.status==='pending'),ok=S.comments.filter(c=>c.status==='approved');
+ w.append(h('div',{class:'sub'},
+  h('button',{class:S.cf==='pending'?'on':'',onclick:()=>{S.cf='pending';render()}},'Bekleyen ('+pend.length+')'),
+  h('button',{class:S.cf==='approved'?'on':'',onclick:()=>{S.cf='approved';render()}},'Yayında ('+ok.length+')')));
+ const list=S.cf==='pending'?pend:ok;
+ if(!list.length)w.append(h('p',{class:'empty'},S.cf==='pending'?'Onay bekleyen yorum yok.':'Yayında yorum yok.'));
+ list.forEach(c=>{
+  const act=h('div',{class:'act'});
+  act.append(S.cf==='pending'
+   ?btn('Onayla',()=>cAct(c.id,()=>api('admin/comments/'+c.id,{method:'PATCH',body:{status:'approved'}}),'Yorum yayınlandı'),'ok')
+   :btn('Yayından kaldır',()=>cAct(c.id,()=>api('admin/comments/'+c.id,{method:'PATCH',body:{status:'pending'}}),'Yayından kaldırıldı')),
+   btn('Sil',()=>{if(confirm('Bu yorum kalıcı olarak silinsin mi?'))cAct(c.id,()=>api('admin/comments/'+c.id,{method:'DELETE'}),'Yorum silindi')},'danger'));
+  w.append(h('div',{class:'rc'},h('div',{class:'st'},'★'.repeat(c.rating)+'☆'.repeat(5-c.rating)),h('p',{},c.text),
+   h('small',{},c.name+' · '+new Date(c.date).toLocaleString('tr-TR',{dateStyle:'medium',timeStyle:'short'})),act))});
+ return w}
+
+/* ---- menü ---- */
+function menuPanel(){
+ const m=S.content.menu,w=h('div');
+ w.append(h('p',{class:'lead'},'Ürünleri düzenle, sırala veya sil. Değişiklikler "Kaydet"e basınca sitede görünür.'));
+ m.forEach((cat,ci)=>{
+  const items=h('div');
+  cat.items.forEach((it,ii)=>items.append(h('div',{class:'it'},
+   bind(it,'name','Ürün adı'),bind(it,'price','₺120',{inputMode:'text'}),bind(it,'desc','Açıklama (isteğe bağlı)',{class:'d'}),
+   h('div',{class:'act'},btn('↑',()=>move(cat.items,ii,-1)),btn('↓',()=>move(cat.items,ii,1)),btn('Sil',()=>{cat.items.splice(ii,1);dirty();render()},'danger')))));
+  w.append(h('section',{class:'card'},
+   h('div',{class:'ch'},bind(cat,'title','Kategori adı'),
+    h('div',{class:'act'},btn('↑',()=>move(m,ci,-1)),btn('↓',()=>move(m,ci,1)),btn('Kategoriyi sil',()=>{if(confirm('Kategori ve içindeki tüm ürünler silinsin mi?')){m.splice(ci,1);dirty();render()}},'danger'))),
+   items,h('div',{class:'act'},btn('+ Ürün ekle',()=>{cat.items.push({name:'',desc:'',price:''});dirty();render()}))))});
+ w.append(btn('+ Kategori ekle',()=>{m.push({title:'',items:[{name:'',desc:'',price:''}]});dirty();render()}));
+ return w}
+
+/* ---- galeri ---- */
+function resize(file){return new Promise((res,rej)=>{
+ const u=URL.createObjectURL(file),i=new Image();
+ i.onload=()=>{const s=Math.min(1,1200/Math.max(i.width,i.height)),c=document.createElement('canvas');c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);
+  c.getContext('2d').drawImage(i,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.82))};
+ i.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Bu resim açılamadı'))};i.src=u})}
+async function upload(files){
+ const g=S.content.gallery;
+ for(const f of files){
+  if(g.length>=24){toast('En fazla 24 fotoğraf eklenebilir',1);break}
+  try{toast('Yükleniyor: '+f.name);const j=await api('admin/images',{method:'POST',body:{dataUrl:await resize(f)}});g.push({id:j.id,caption:''});dirty();render()}
+  catch(e){toast(e.message,1)}}
+ toast('Yükleme tamamlandı, kaydetmeyi unutma')}
+function galPanel(){
+ const g=S.content.gallery,w=h('div'),grid=h('div',{class:'gg'});
+ w.append(h('p',{class:'lead'},'İlk fotoğraf sitede büyük görünür. Sıralamayı ◀ ▶ ile değiştir. Hiç fotoğraf yoksa sitede örnek kutular görünür.'));
+ const fi=h('input',{type:'file',accept:'image/*',multiple:true,hidden:true,onchange:e=>{upload([...e.target.files]);e.target.value=''}});
+ w.append(fi,h('div',{class:'act',style:'margin-bottom:16px'},btn('+ Fotoğraf ekle',()=>fi.click(),'fill')));
+ g.forEach((p,i)=>grid.append(h('div',{class:'gi'},h('img',{src:'/api/img/'+p.id,alt:p.caption||'Galeri',loading:'lazy'}),
+  bind(p,'caption','Başlık (isteğe bağlı)',{maxlength:60}),
+  h('div',{class:'act'},btn('◀',()=>move(g,i,-1)),btn('▶',()=>move(g,i,1)),btn('Sil',()=>{S.removed.push(p.id);g.splice(i,1);dirty();render()},'danger')))));
+ w.append(grid);return w}
+
+/* ---- iletişim ---- */
+function conPanel(){
+ const k=S.content.contact,w=h('div');
+ const fld=(l,el)=>h('div',{class:'fld'},h('label',{},l),el);
+ const hrs=h('div');
+ k.hours.forEach((x,i)=>hrs.append(h('div',{class:'hr'},bind(x,'label','Gün (Hafta içi)'),bind(x,'time','12:00 – 23:00'),btn('Sil',()=>{k.hours.splice(i,1);dirty();render()},'danger'))));
+ w.append(h('section',{class:'card'},h('h3',{},'Adres ve telefon'),
+  fld('Adres',h('textarea',{value:k.address,rows:3,oninput:e=>{k.address=e.target.value;dirty()}})),
+  fld('Telefon (arama butonu bu numarayı arar)',bind(k,'phone','0 5xx xxx xx xx',{type:'tel'})),
+  fld('Instagram',bind(k,'instagram','@kullaniciadi'))),
+  h('section',{class:'card'},h('h3',{},'Çalışma saatleri'),hrs,btn('+ Satır ekle',()=>{k.hours.push({label:'',time:''});dirty();render()})));
+ return w}
+
+/* ---- kaydet ---- */
+$('#sbtn').onclick=async()=>{
+ const b=$('#sbtn');b.disabled=true;
+ const c=S.content;
+ c.menu=c.menu.map(k=>({...k,items:k.items.filter(i=>i.name.trim())})).filter(k=>k.title.trim()||k.items.length);
+ c.contact.hours=c.contact.hours.filter(x=>x.label.trim()||x.time.trim());
+ try{await api('admin/content',{method:'PUT',body:c});
+  await Promise.allSettled(S.removed.map(id=>api('admin/images/'+id,{method:'DELETE'})));
+  S.removed=[];S.dirty=false;toast('Kaydedildi, site güncellendi');render()}
+ catch(e){toast(e.message,1)}
+ b.disabled=false};
+
+(async()=>{if(token){try{await load();return}catch(_){}}$('#login').hidden=false})();
+</script>
+</body></html>
